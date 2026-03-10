@@ -9,7 +9,9 @@
   <body>
     <p>Enter your markdown text here:</p><br />
     <textarea id="input"></textarea><br />
-    <button onclick="genTableOfContents(1)" id="generate">Generate</button><br />
+    <label for"startingIndex">Enter header index to start generating from (default is 0):</label><br />
+    <input id="startingIndex" type="number"><br /><br />
+    <button onclick="genTableOfContents()" id="generate">Generate</button><br />
     <textarea id="result"></textarea>
   </body>
 </html>

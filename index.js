@@ -1,10 +1,15 @@
-function genTableOfContents(startingIndex) {
+function getStartingIndex() {
+  return document.getElementById("startingIndex").value || 0;
+}
+
+function genTableOfContents() {
   const input = document.getElementById("input").value; 
   const headersRegex = /^(#{1,6}) (.*)/gm;
   const titlesCount = new Map();
-  let tableOfContents = "";
+  const startingIndex = getStartingIndex();
   let baseLevel = 0;
   let i = 0;
+  let tableOfContents = "";
  
   const matches = input.matchAll(headersRegex); 
 
