@@ -1,0 +1,34 @@
+function genTableOfContents(startingIndex) {
+  const input = document.getElementById("input").value; 
+  const headersRegex = /^(#{1,6}) (.*)/gm;
+  const titlesCount = new Map();
+  let tableOfContents = "";
+  let baseLevel = 0;
+  let i = 0;
+ 
+  const matches = input.matchAll(headersRegex); 
+
+  for (match of matches) {
+   if (startingIndex <= i) {
+     if (baseLevel === 0) {
+       baseLevel = match[1].length;
+     }
+   
+     let title = match[2].toLowerCase().replaceAll(" ", "-");
+     const appearenceCount = titlesCount.get(title);
+
+     if (appearenceCount) {
+       title += `-${appearenceCount}`;
+     }
+
+     titlesCount.set(title, (appearenceCount ?? 0) + 1);
+     const indentationLevel = Math.abs(match[1].length - baseLevel) * 3;
+
+     tableOfContents += `${" ".repeat(indentationLevel)}1. [${match[2]}](#${title})\n`;
+   }
+
+   i++;
+  }; 
+
+  document.getElementById("result").value = tableOfContents;
+}
