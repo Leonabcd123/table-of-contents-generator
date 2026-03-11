@@ -6,46 +6,46 @@ class Node {
   parentNode;
   level;
   id;
-  header;
-  constructor(parentNode, level, id, header) {
+  headerLength;
+  constructor(parentNode, level, id, headerLength) {
     this.parentNode = parentNode;
     this.level = level;
     this.id = id;
-    this.header = header;
+    this.headerLength = headerLength;
   }
 }
 
-function getIndentationLevel(currentNode, currentHeader) {
-  if (currentHeader.length === currentNode.header.length) {
+function getIndentationLevel(currentNode, currentHeaderLength) {
+  if (currentHeaderLength === currentNode.headerLength) {
     return new Node(
       currentNode.parentNode,
       currentNode.level,
       currentNode.id + 1,
-      currentHeader,
+      currentHeaderLength,
     );
   }
 
-  if (currentHeader.length > currentNode.header.length) {
+  if (currentHeaderLength > currentNode.headerLength) {
     const newLevel = currentNode.level + 1;
-    return new Node(currentNode, newLevel, 1, currentHeader);
+    return new Node(currentNode, newLevel, 1, currentHeaderLength);
   }
 
   let node = currentNode;
   while (node.parentNode) {
-    if (currentHeader.length === node.header.length) {
+    if (currentHeaderLength === node.headerLength) {
       const newLevel = node.level;
-      return new Node(node, newLevel, node.id + 1, currentHeader);
+      return new Node(node, newLevel, node.id + 1, currentHeaderLength);
     }
 
-    if (currentHeader.length > node.header.length) {
+    if (currentHeaderLength > node.headerLength) {
       const newLevel = node.level + 1;
-      return new Node(node, newLevel, 1, currentHeader);
+      return new Node(node, newLevel, 1, currentHeaderLength);
     }
 
     node = node.parentNode;
   }
 
-  return new Node(null, 0, 1, currentHeader);
+  return new Node(null, 0, 1, currentHeaderLength);
 }
 
 function genTableOfContents() {
@@ -75,8 +75,8 @@ function genTableOfContents() {
 
       node =
         i === startingIndex
-          ? new Node(null, 0, 1, header)
-          : getIndentationLevel(node, header);
+          ? new Node(null, 0, 1, header.length)
+          : getIndentationLevel(node, header.length);
 
       tableOfContents += `${" ".repeat(node.level * 3)}${node.id}. [${title}](#${modifiedTitle})\n`;
     }
