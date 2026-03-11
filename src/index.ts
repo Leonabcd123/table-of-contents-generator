@@ -1,13 +1,14 @@
-function getStartingIndex(): number {
-  return parseInt((document.getElementById("startingIndex") as HTMLInputElement).value) || 0;
-}
-
 class indentationNode {
   parentNode: indentationNode | null;
   level: number;
   id: number;
   headerLength: number;
-  constructor(parentNode: indentationNode | null, level: number, id: number, headerLength: number) {
+  constructor(
+    parentNode: indentationNode | null,
+    level: number,
+    id: number,
+    headerLength: number,
+  ) {
     this.parentNode = parentNode;
     this.level = level;
     this.id = id;
@@ -15,11 +16,36 @@ class indentationNode {
   }
 }
 
-function getIndentationLevel(currentNode: indentationNode, currentHeaderLength: number): indentationNode {
+function getStartingIndex(): number {
+  return (
+    parseInt(
+      (document.getElementById("startingIndex") as HTMLInputElement).value,
+    ) || 0
+  );
+}
+
+function getInputString(): string {
+  return (document.getElementById("input") as HTMLInputElement).value;
+}
+
+function showResult(tableOfContents: string): void {
+  (document.getElementById("result") as HTMLInputElement).value =
+    tableOfContents;
+}
+
+function getIndentationLevel(
+  currentNode: indentationNode,
+  currentHeaderLength: number,
+): indentationNode {
   let node: indentationNode | null = currentNode;
   while (node) {
     if (currentHeaderLength === node.headerLength) {
-      return new indentationNode(node.parentNode, node.level, node.id + 1, currentHeaderLength);
+      return new indentationNode(
+        node.parentNode,
+        node.level,
+        node.id + 1,
+        currentHeaderLength,
+      );
     }
 
     if (currentHeaderLength > node.headerLength) {
@@ -33,7 +59,7 @@ function getIndentationLevel(currentNode: indentationNode, currentHeaderLength: 
 }
 
 function genTableOfContents(): void {
-  const input = (document.getElementById("input") as HTMLInputElement).value;
+  const input = getInputString();
   const headersRegex = /^(#{1,6}) (.*)/gm;
   const titlesCount = new Map();
   const startingIndex = getStartingIndex();
@@ -68,5 +94,5 @@ function genTableOfContents(): void {
     i++;
   }
 
-  (document.getElementById("result") as HTMLInputElement).value = tableOfContents;
+  showResult(tableOfContents);
 }

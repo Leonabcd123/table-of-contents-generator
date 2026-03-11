@@ -1,7 +1,4 @@
 "use strict";
-function getStartingIndex() {
-    return parseInt(document.getElementById("startingIndex").value) || 0;
-}
 class indentationNode {
     constructor(parentNode, level, id, headerLength) {
         this.parentNode = parentNode;
@@ -9,6 +6,16 @@ class indentationNode {
         this.id = id;
         this.headerLength = headerLength;
     }
+}
+function getStartingIndex() {
+    return (parseInt(document.getElementById("startingIndex").value) || 0);
+}
+function getInputString() {
+    return document.getElementById("input").value;
+}
+function showResult(tableOfContents) {
+    document.getElementById("result").value =
+        tableOfContents;
 }
 function getIndentationLevel(currentNode, currentHeaderLength) {
     let node = currentNode;
@@ -24,7 +31,7 @@ function getIndentationLevel(currentNode, currentHeaderLength) {
     return new indentationNode(null, 0, 1, currentHeaderLength);
 }
 function genTableOfContents() {
-    const input = document.getElementById("input").value;
+    const input = getInputString();
     const headersRegex = /^(#{1,6}) (.*)/gm;
     const titlesCount = new Map();
     const startingIndex = getStartingIndex();
@@ -50,6 +57,6 @@ function genTableOfContents() {
         }
         i++;
     }
-    document.getElementById("result").value = tableOfContents;
+    showResult(tableOfContents);
 }
 //# sourceMappingURL=index.js.map
