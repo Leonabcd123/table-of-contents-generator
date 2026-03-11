@@ -26,14 +26,13 @@ function getIndentationLevel(currentNode: indentationNode, currentHeaderLength: 
   }
 
   if (currentHeaderLength > currentNode.headerLength) {
-    const newLevel = currentNode.level + 1;
-    return new indentationNode(currentNode, newLevel, 1, currentHeaderLength);
+    return new indentationNode(currentNode, currentNode.level + 1, 1, currentHeaderLength);
   }
 
   let node = currentNode.parentNode;
   while (node) {
     if (currentHeaderLength === node.headerLength) {
-      return new indentationNode(node, node.level, node.id + 1, currentHeaderLength);
+      return new indentationNode(node.parentNode, node.level, node.id + 1, currentHeaderLength);
     }
 
     if (currentHeaderLength > node.headerLength) {
