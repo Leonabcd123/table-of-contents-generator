@@ -17,38 +17,35 @@ class Node {
 
 function getIndentationLevel(currentNode, currentHeader) {
   if (currentHeader.length === currentNode.header.length) {
-    return [
-      new Node(
-        currentNode.parentNode,
-        currentNode.level,
-        currentNode.id + 1,
-        currentHeader,
-      ),
+    return new Node(
+      currentNode.parentNode,
       currentNode.level,
-    ];
+      currentNode.id + 1,
+      currentHeader,
+    );
   }
 
   if (currentHeader.length > currentNode.header.length) {
     const newLevel = currentNode.level + 1;
-    return [new Node(currentNode, newLevel, 1, currentHeader), newLevel];
+    return new Node(currentNode, newLevel, 1, currentHeader);
   }
 
   let node = currentNode;
   while (node.parentNode) {
     if (currentHeader.length === node.header.length) {
       const newLevel = node.level;
-      return [new Node(node, newLevel, node.id + 1, currentHeader), newLevel];
+      return new Node(node, newLevel, node.id + 1, currentHeader);
     }
 
     if (currentHeader.length > node.header.length) {
       const newLevel = node.level + 1;
-      return [new Node(node, newLevel, 1, currentHeader), newLevel];
+      return new Node(node, newLevel, 1, currentHeader);
     }
 
     node = node.parentNode;
   }
 
-  return [new Node(null, 0, 1, currentHeader), 0];
+  return new Node(null, 0, 1, currentHeader);
 }
 
 function genTableOfContents() {
@@ -57,7 +54,6 @@ function genTableOfContents() {
   const titlesCount = new Map();
   const startingIndex = getStartingIndex();
   let node = null;
-  let indentationLevel = 0;
   let i = 0;
   let tableOfContents = "";
 
@@ -77,13 +73,12 @@ function genTableOfContents() {
 
       titlesCount.set(modifiedTitle, (appearenceCount ?? 0) + 1);
 
-      if (i === startingIndex) {
-        node = new Node(null, 0, 1, header);
-      } else {
-        [node, indentationLevel] = getIndentationLevel(node, header);
-      }
+      node =
+        i === startingIndex
+          ? new Node(null, 0, 1, header)
+          : getIndentationLevel(node, header);
 
-      tableOfContents += `${" ".repeat(indentationLevel * 3)}${node.id}. [${title}](#${modifiedTitle})\n`;
+      tableOfContents += `${" ".repeat(node.level * 3)}${node.id}. [${title}](#${modifiedTitle})\n`;
     }
 
     i++;
