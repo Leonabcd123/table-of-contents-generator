@@ -50,22 +50,25 @@ function genTableOfContents() {
 
   for (match of matches) {
     if (startingIndex <= i) {
-      let title = match[2].toLowerCase().replaceAll(" ", "-");
-      const appearenceCount = titlesCount.get(title);
+      const header = match[1];
+      const title = match[2];
+
+      let modifiedTitle = title.toLowerCase().replaceAll(" ", "-");
+      const appearenceCount = titlesCount.get(modifiedTitle);
 
       if (appearenceCount) {
-        title += `-${appearenceCount}`;
+        modifiedTitle += `-${appearenceCount}`;
       }
 
-      titlesCount.set(title, (appearenceCount ?? 0) + 1);
+      titlesCount.set(modifiedTitle, (appearenceCount ?? 0) + 1);
 
       if (i === startingIndex) {
-        node = new Node(null, 0, match[1]);
+        node = new Node(null, 0, header);
       }
 
-      [node, indentationLevel] = getIndentationLevel(node, match[1]);
+      [node, indentationLevel] = getIndentationLevel(node, header);
 
-      tableOfContents += `${" ".repeat(indentationLevel * 3)}1. [${match[2]}](#${title})\n`;
+      tableOfContents += `${" ".repeat(indentationLevel * 3)}1. [${title}](#${modifiedTitle})\n`;
     }
 
     i++;
