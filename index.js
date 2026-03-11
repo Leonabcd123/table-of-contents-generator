@@ -5,35 +5,50 @@ function getStartingIndex() {
 class Node {
   parentNode;
   level;
+  id;
   header;
-  constructor(parentNode, level, header) {
+  constructor(parentNode, level, id, header) {
     this.parentNode = parentNode;
     this.level = level;
+    this.id = id;
     this.header = header;
   }
 }
 
 function getIndentationLevel(currentNode, currentHeader) {
   if (currentHeader.length === currentNode.header.length) {
-    return [currentNode, currentNode.level];
+    return [
+      new Node(
+        currentNode.parentNode,
+        currentNode.level,
+        currentNode.id + 1,
+        currentHeader,
+      ),
+      currentNode.level,
+    ];
   }
 
   if (currentHeader.length > currentNode.header.length) {
     const newLevel = currentNode.level + 1;
-    return [new Node(currentNode, newLevel, currentHeader), newLevel];
+    return [new Node(currentNode, newLevel, 1, currentHeader), newLevel];
   }
 
   let node = currentNode;
   while (node.parentNode) {
-    if (currentHeader.length >= node.header.length) {
+    if (currentHeader.length === node.header.length) {
       const newLevel = node.level;
-      return [new Node(node, newLevel, currentHeader), newLevel];
+      return [new Node(node, newLevel, node.id + 1, currentHeader), newLevel];
+    }
+
+    if (currentHeader.length > node.header.length) {
+      const newLevel = node.level + 1;
+      return [new Node(node, newLevel, 1, currentHeader), newLevel];
     }
 
     node = node.parentNode;
   }
 
-  return [new Node(null, 0, currentHeader), 0];
+  return [new Node(null, 0, 1, currentHeader), 0];
 }
 
 function genTableOfContents() {
@@ -63,12 +78,12 @@ function genTableOfContents() {
       titlesCount.set(modifiedTitle, (appearenceCount ?? 0) + 1);
 
       if (i === startingIndex) {
-        node = new Node(null, 0, header);
+        node = new Node(null, 0, 1, header);
+      } else {
+        [node, indentationLevel] = getIndentationLevel(node, header);
       }
 
-      [node, indentationLevel] = getIndentationLevel(node, header);
-
-      tableOfContents += `${" ".repeat(indentationLevel * 3)}1. [${title}](#${modifiedTitle})\n`;
+      tableOfContents += `${" ".repeat(indentationLevel * 3)}${node.id}. [${title}](#${modifiedTitle})\n`;
     }
 
     i++;
