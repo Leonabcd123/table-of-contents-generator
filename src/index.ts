@@ -75,13 +75,13 @@ function genTableOfContents(): void {
       const title = match[2];
 
       let modifiedTitle = title.toLowerCase().replaceAll(" ", "-");
-      const appearenceCount = titlesCount.get(modifiedTitle);
+      const appearenceCount = titlesCount.get(title);
 
       if (appearenceCount) {
         modifiedTitle += `-${appearenceCount}`;
       }
 
-      titlesCount.set(modifiedTitle, (appearenceCount ?? 0) + 1);
+      titlesCount.set(title, (appearenceCount ?? 0) + 1);
 
       node =
         node === null
