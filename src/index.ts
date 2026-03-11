@@ -1,13 +1,13 @@
-function getStartingIndex() {
-  return parseInt(document.getElementById("startingIndex").value) || 0;
+function getStartingIndex(): number {
+  return parseInt((document.getElementById("startingIndex") as HTMLInputElement).value) || 0;
 }
 
-class Node {
-  parentNode;
-  level;
-  id;
-  headerLength;
-  constructor(parentNode, level, id, headerLength) {
+class indentationNode {
+  parentNode: indentationNode | null;
+  level: number;
+  id: number;
+  headerLength: number;
+  constructor(parentNode: indentationNode | null, level: number, id: number, headerLength: number) {
     this.parentNode = parentNode;
     this.level = level;
     this.id = id;
@@ -15,9 +15,9 @@ class Node {
   }
 }
 
-function getIndentationLevel(currentNode, currentHeaderLength) {
+function getIndentationLevel(currentNode: indentationNode, currentHeaderLength: number): indentationNode {
   if (currentHeaderLength === currentNode.headerLength) {
-    return new Node(
+    return new indentationNode(
       currentNode.parentNode,
       currentNode.level,
       currentNode.id + 1,
@@ -27,29 +27,29 @@ function getIndentationLevel(currentNode, currentHeaderLength) {
 
   if (currentHeaderLength > currentNode.headerLength) {
     const newLevel = currentNode.level + 1;
-    return new Node(currentNode, newLevel, 1, currentHeaderLength);
+    return new indentationNode(currentNode, newLevel, 1, currentHeaderLength);
   }
 
   let node = currentNode;
   while (node.parentNode) {
     if (currentHeaderLength === node.headerLength) {
       const newLevel = node.level;
-      return new Node(node, newLevel, node.id + 1, currentHeaderLength);
+      return new indentationNode(node, newLevel, node.id + 1, currentHeaderLength);
     }
 
     if (currentHeaderLength > node.headerLength) {
       const newLevel = node.level + 1;
-      return new Node(node, newLevel, 1, currentHeaderLength);
+      return new indentationNode(node, newLevel, 1, currentHeaderLength);
     }
 
     node = node.parentNode;
   }
 
-  return new Node(null, 0, 1, currentHeaderLength);
+  return new indentationNode(null, 0, 1, currentHeaderLength);
 }
 
-function genTableOfContents() {
-  const input = document.getElementById("input").value;
+function genTableOfContents(): void {
+  const input = (document.getElementById("input") as HTMLInputElement).value;
   const headersRegex = /^(#{1,6}) (.*)/gm;
   const titlesCount = new Map();
   const startingIndex = getStartingIndex();
@@ -59,7 +59,7 @@ function genTableOfContents() {
 
   const matches = input.matchAll(headersRegex);
 
-  for (match of matches) {
+  for (const match of matches) {
     if (startingIndex <= i) {
       const header = match[1];
       const title = match[2];
@@ -74,8 +74,8 @@ function genTableOfContents() {
       titlesCount.set(modifiedTitle, (appearenceCount ?? 0) + 1);
 
       node =
-        i === startingIndex
-          ? new Node(null, 0, 1, header.length)
+        node === null
+          ? new indentationNode(null, 0, 1, header.length)
           : getIndentationLevel(node, header.length);
 
       tableOfContents += `${" ".repeat(node.level * 3)}${node.id}. [${title}](#${modifiedTitle})\n`;
@@ -84,5 +84,5 @@ function genTableOfContents() {
     i++;
   }
 
-  document.getElementById("result").value = tableOfContents;
+  (document.getElementById("result") as HTMLInputElement).value = tableOfContents;
 }
