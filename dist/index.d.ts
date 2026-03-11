@@ -8,5 +8,5 @@ declare class indentationNode {
 declare function getStartingIndex(): number;
 declare function getInputString(): string;
 declare function showResult(tableOfContents: string): void;
-declare function getIndentationLevel(currentNode: indentationNode, currentHeaderLength: number): indentationNode;
+declare function getNextNode(currentNode: indentationNode, currentHeaderLength: number): indentationNode;
 declare function genTableOfContents(): void;

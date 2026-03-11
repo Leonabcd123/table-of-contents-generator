@@ -17,7 +17,7 @@ function showResult(tableOfContents) {
     document.getElementById("result").value =
         tableOfContents;
 }
-function getIndentationLevel(currentNode, currentHeaderLength) {
+function getNextNode(currentNode, currentHeaderLength) {
     let node = currentNode;
     while (node) {
         if (currentHeaderLength === node.headerLength) {
@@ -52,7 +52,7 @@ function genTableOfContents() {
             node =
                 node === null
                     ? new indentationNode(null, 0, 1, header.length)
-                    : getIndentationLevel(node, header.length);
+                    : getNextNode(node, header.length);
             tableOfContents += `${" ".repeat(node.level * 3)}${node.id}. [${title}](#${modifiedTitle})\n`;
         }
         i++;
