@@ -27,9 +27,9 @@ function genTableOfContents() {
      }
 
      titlesCount.set(title, (appearenceCount ?? 0) + 1);
-     const indentationLevel = Math.abs(match[1].length - baseLevel) * 3;
+     const indentationLevel = match[1].length - baseLevel * 3;
 
-     tableOfContents += `${" ".repeat(indentationLevel)}1. [${match[2]}](#${title})\n`;
+     tableOfContents += `${" ".repeat(indentationLevel > 0 ? indentationLevel : 0)}1. [${match[2]}](#${title})\n`;
    }
 
    i++;
